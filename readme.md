@@ -1,6 +1,6 @@
-** weChatBot
+**weChatBot
 
-*** Goal
+***Goal
 1. can reply automatically [processing]
 2. can play dice game [done]
 3. can send random photo [done]
