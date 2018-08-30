@@ -133,13 +133,18 @@ async function onMessage (msg: Message) {
     else if ("wd" == msg.text()){
        const url = "http://wthrcdn.etouch.cn/weather_mini?city=北京"
        msg.say("get weather")
+       let json;
        try{
            const response = await fetch(url)
            var unpack_res
-           zlib.gunzip(response, function(error, binary){
+           zlib.gunzip(response, function(error : any, binary : any){
+	     if(error){
+		console.log("error happen on gzip")
+	   }else{
              unpack_res = binary.toString("utf-8")
+             json = await unpack_res.json()
+	   }
            })
-           const json = await unpack_res.json()
            msg.say(JSON.stringify(json))
        }catch (error){
         msg.say("fail")
@@ -284,8 +289,7 @@ async function onMessage (msg: Message) {
   ].join(''))
   
   return
-}
-}
+))
 
 
 
