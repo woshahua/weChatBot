@@ -1,4 +1,5 @@
 ## weChatBot
+fork from the wechaty project
 
 ### Goal
 1. can reply automatically [processing]
