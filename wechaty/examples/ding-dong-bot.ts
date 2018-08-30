@@ -10,6 +10,8 @@ import { generate } from 'qrcode-terminal'
 import fs = require("fs")
 import fetch from "node-fetch"
 
+// use zlib to unpack zipped json data
+const zlib = require("zlib")
 
 /**
  *
@@ -125,7 +127,7 @@ async function onMessage (msg: Message) {
         let newPic = await msg.toFileBox()
         let picLoc = "/home/pi/Project/wechaty/examples/pics/" + fileNum + ".jpg"
         await newPic.toFile(picLoc, true)
-	msg.say("表情包已收藏")
+	      msg.say("表情包已收藏")
         fileNum = fileNum + 1
     }
     else if ("wd" == msg.text()){
@@ -133,7 +135,11 @@ async function onMessage (msg: Message) {
        msg.say("get weather")
        try{
            const response = await fetch(url)
-           const json = await response.json()
+           var unpack_res
+           zlib.gunzip(response, function(error, binary){
+             unpack_res = binary.toString("utf-8")
+           })
+           const json = await unpack_res.json()
            msg.say(JSON.stringify(json))
        }catch (error){
         msg.say("fail")
@@ -154,7 +160,7 @@ async function onMessage (msg: Message) {
 	    msg.say("task manager finish")
 	    return
 	}
-    }
+}
 
 
     /* love egg */
@@ -228,9 +234,6 @@ async function onMessage (msg: Message) {
        await msg.say(d6)
      }
 
-    
-     if (botInt > tmpInt){     
-       let fileBox2 = FileBox.fromFile("/home/pi/Project/wechaty/examples/pics/win.jpeg")
       await msg.say(fileBox2)
      }
      else{
@@ -284,20 +287,7 @@ async function onMessage (msg: Message) {
 }
 }
 
-async function remindTime() {
-  
-  const contact = bot.Contact.load("gaohang0742")
-  var D = new Date()
-  var hr = D.getHours()
-  var mt = D.getMinutes()
-  contact.say("小弟已登录 " +hr.toString() + ":" + mt.toString())
-}
 
-
-const SLEEP = 7  
-setTimeout(remindTime, SLEEP*1000)
- 
- 
 
 /**
  *
